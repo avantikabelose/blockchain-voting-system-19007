@@ -1,7 +1,7 @@
 from flask import Flask, request, render_template_string
 import hashlib
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 app = Flask(__name__)
 
@@ -18,7 +18,7 @@ class Blockchain:
     def create_block(self, proof, previous_hash):
         block = {
             'index': len(self.chain) + 1,
-            'timestamp': datetime.utcnow().isoformat() + "Z",
+            'timestamp': datetime.now(timezone.utc).isoformat(),
             'votes': self.current_votes.copy(),
             'proof': proof,
             'previous_hash': previous_hash
@@ -76,9 +76,7 @@ template = '''
             background: #f4f6f8;
             margin: 40px;
         }
-        h1, h2 {
-            color: #222;
-        }
+        h1, h2 { color: #222; }
         form {
             background: white;
             padding: 25px;
@@ -101,9 +99,7 @@ template = '''
             cursor: pointer;
             border-radius: 5px;
         }
-        button:hover {
-            background: #1F5E3C;
-        }
+        button:hover { background: #1F5E3C; }
         .block {
             background: white;
             padding: 15px;
@@ -182,4 +178,4 @@ def add_vote():
 # Run the App
 # -------------------------
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
